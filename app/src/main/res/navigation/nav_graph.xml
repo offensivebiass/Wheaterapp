@@ -10,12 +10,24 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_changeCityFragment"
-            app:destination="@id/changeCityFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim" />
+            app:destination="@id/changeCityFragment" />
     </fragment>
     <fragment
         android:id="@+id/changeCityFragment"
         android:name="com.syesoftware.wheaterapp.change.ChangeCityFragment"
         android:label="fragment_change_city"
-        tools:layout="@layout/fragment_change_city" />
+        tools:layout="@layout/fragment_change_city" >
+        <action
+            android:id="@+id/action_changeCityFragment_to_homeFragment"
+            app:clearTask="true"
+            app:destination="@+id/homeFragment" />
+        <argument
+            android:name="latitude"
+            android:defaultValue="null"
+            app:type="string" />
+        <argument
+            android:name="longitude"
+            android:defaultValue="null"
+            app:type="string" />
+    </fragment>
 </navigation>

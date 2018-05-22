@@ -43,14 +43,22 @@ class HomeFragment : Fragment() {
 
         progress = ProgressDialog(context)
 
+        val args : Bundle? = arguments
+        locationLatitude = args!!.getString("LATITUDE", "")
+        locationLongitude = args!!.getString("LONGITUDE", "")
+
         changeCityButton.setOnClickListener({
-            NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_changeCityFragment)
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_homeFragment_to_changeCityFragment)
         })
 
 
-        weatherFont = Typeface.createFromAsset(context?.assets, "fonts/weathericons_regular_webfont.ttf")
+        weatherFont = Typeface
+                .createFromAsset(context?.assets, "fonts/weathericons_regular_webfont.ttf")
 
-        getLocation()
+        if (locationLatitude.isEmpty() && locationLongitude.isEmpty()) {
+            getLocation()
+        }
         getData()
     }
 
@@ -61,7 +69,8 @@ class HomeFragment : Fragment() {
             ActivityCompat.requestPermissions(context!! as Activity,
                     arrayOf(ACCESS_FINE_LOCATION), targetRequestCode)
         } else {
-            val lm = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val lm = context!!
+                    .getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             locationLongitude = location.longitude.toString()
             locationLatitude = location.latitude.toString()
@@ -72,7 +81,8 @@ class HomeFragment : Fragment() {
         Log.d("location Lat and Long", locationLatitude + " " + locationLongitude)
         progress.show()
         val service = RestClient.getService()
-        val call = service.getWeatherFromLocation(locationLatitude, locationLongitude, "metric")
+        val call = service
+                .getWeatherFromLocation(locationLatitude, locationLongitude, "metric")
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
@@ -86,7 +96,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun reloadData(weather: Weather?) {
-        val df = DateFormat.getDateTimeInstance()
+        val df = DateFormat.getDateInstance(1, Locale("ES", "MX"))
 
         if (weather != null) {
             cityTextView.text = weather.name
